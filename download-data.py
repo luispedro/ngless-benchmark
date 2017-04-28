@@ -25,13 +25,14 @@ data = {
                         'ERR478/ERR478961/ERR478961_1.fastq.gz'],
         'SAMEA2466896' : ['ERR478/ERR478962/ERR478962_1.fastq.gz',
                         'ERR478/ERR478963/ERR478963_1.fastq.gz'],
-        'SAMEA2466965' : ['ERR478/ERR478964/ERR478964_1.fastq.gz'
+        'SAMEA2466965' : ['ERR478/ERR478964/ERR478964_1.fastq.gz',
                         'ERR478/ERR478965/ERR478965_1.fastq.gz',
                         'ERR478/ERR478966/ERR478966_1.fastq.gz',
                         'ERR478/ERR478967/ERR478967_1.fastq.gz']
         }
     }
 
+print("Downloading data [this can take a while and will take ca. 50GiB of disk space]...")
 for benchgroup, entries in data.items():
     for sample, fqs in entries.items():
         basedir = path.join('data', benchgroup, sample)
@@ -39,7 +40,9 @@ for benchgroup, entries in data.items():
         fqs += [f.replace('_1.fastq', '_2.fastq') for f in fqs]
         for f in fqs:
             target = path.join(basedir, path.basename(f))
+            print(f"Downloading {target}...")
             download_file(ENA_BASE_URL + f, target)
     with open(path.join('data', benchgroup, benchgroup), 'wt') as slist:
         for sample in entries.keys():
             slist.write(f"{sample}\n")
+print("Done.")
