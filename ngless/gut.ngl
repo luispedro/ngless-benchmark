@@ -33,7 +33,16 @@ counts = count(mapped,
 collect(counts,
         current=sample,
         allneeded=samples,
-        ofile='igc.profiles.txt')
+        ofile='outputs/gut.igc.functional.profiles.txt')
+
+counts = count(mapped,
+            features=['seqname'],
+            normalization={scaled})
+
+collect(counts,
+        current=sample,
+        allneeded=samples,
+        ofile='outputs/gut.igc.genes.profiles.txt')
 
 mapped = map(input, reference='motus', mode_all=True)
 
@@ -43,4 +52,4 @@ motus_table = motus(counted)
 collect(motus_table,
         current=sample,
         allneeded=samples,
-        ofile='motus-counts.txt')
+        ofile='outputs/gut.motus.counts.txt')
