@@ -1,7 +1,13 @@
 from jug import TaskGenerator, barrier
 
 @TaskGenerator
-def run_time(script, ncpu):
+def run_time(script, ncpu, tag):
+    '''
+
+    Argument tag is ignored, but is necessary to distinguish the different runs
+    of the script.
+
+    '''
     import subprocess
     args = ['/usr/bin/time', '--verbose', 'ngless', '-j', str(ncpu), '--trace', script]
     p = subprocess.run(args,
@@ -24,7 +30,7 @@ outs = {}
 for rep in range(NREPLICATES):
     cleanup_ngless()
     for sc in ['ocean.ngl', 'gut.ngl']:
-        for _ in range(3):
-            outs[sc, rep] = run_time(sc, NCPU)
+        for i in range(3):
+            outs[sc, rep, i] = run_time(sc, NCPU, rep*NREPLICATES + i)
     barrier()
 
