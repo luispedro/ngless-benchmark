@@ -1,2 +1,4 @@
 *.jugdata/
 /logs/
+MOCAT.executed
+MOCAT.successful
