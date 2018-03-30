@@ -1,0 +1,17 @@
+ngless "0.7"
+import "parallel" version "0.6"
+import "mocat" version "0.0"
+import "specI" version "0.1"
+import "igc" version "0.9"
+import "motus" version "0.1"
+
+samples = readlines('../data/gut/gut')
+sample = lock1(samples)
+
+mapped = samfile('gut-temp/screen-igc/'+sample+'.sam')
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=97, action={drop})
+    if not mr.flag({mapped}):
+        discard
+
+write(mapped, ofile='gut-temp/filtered-igc/'+sample+'.sam')

@@ -1,0 +1,12 @@
+ngless "0.7"
+import "parallel" version "0.6"
+import "mocat" version "0.0"
+
+samples = readlines('../data/gut/gut')
+sample = lock1(samples)
+
+input = load_mocat_sample('gut-temp/rtf-'+sample)
+
+mapped = map(input, reference='hg19')
+
+write(mapped, ofile='gut-temp/screen-hg19-'+sample+'.bam')

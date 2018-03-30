@@ -1,15 +1,16 @@
-ngless "0.0"
-import "parallel" version "0.0"
+ngless "0.7"
+import "parallel" version "0.6"
 import "mocat" version "0.0"
+import "specI" version "0.1"
+import "igc" version "0.9"
 import "motus" version "0.1"
-import "igc" version "0.0"
 
 samples = readlines('../data/gut/gut')
 sample = lock1(samples)
 
 input = load_mocat_sample('../data/gut/' + sample)
 
-preprocess(input, keep_singles=False) using |read|:
+input = preprocess(input, keep_singles=False) using |read|:
     read = substrim(read, min_quality=25)
     if len(read) < 45:
         discard
@@ -23,28 +24,11 @@ mapped = select(mapped) using |mr|:
 
 input = as_reads(mapped)
 
-
-mapped = map(input, reference='igc', mode_all=True)
-
-counts = count(mapped,
-            features=['KEGG_ko', 'eggNOG_OG'],
-            normalization={scaled})
-
-collect(counts,
-        current=sample,
-        allneeded=samples,
-        ofile='outputs/gut.igc.functional.profiles.txt')
-
-counts = count(mapped,
-            features=['seqname'],
-            normalization={scaled})
-
-collect(counts,
-        current=sample,
-        allneeded=samples,
-        ofile='outputs/gut.igc.genes.profiles.txt')
-
 mapped = map(input, reference='motus', mode_all=True)
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=97, action={drop})
+    if not mr.flag({mapped}):
+        discard
 
 counted = count(mapped, features=['gene'], multiple={dist1}, normalization={scaled})
 
@@ -53,3 +37,54 @@ collect(motus_table,
         current=sample,
         allneeded=samples,
         ofile='outputs/gut.motus.counts.txt')
+
+input = as_reads(mapped)
+
+mapped = map(input, reference='refmg')
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=97, action={drop})
+    if not mr.flag({mapped}):
+        discard
+
+collect(count(mapped,
+                features=['specI_cluster'],
+                include_minus1=True),
+    current=sample,
+    allneeded=samples,
+    ofile='outputs/specI.raw.counts.txt')
+
+collect(count(mapped,
+                    features=['specI_cluster'],
+                    normalization={scaled},
+                    include_minus1=True),
+    current=sample,
+    allneeded=samples,
+    ofile='outputs/specI.scaled.counts.txt')
+
+mapped = map(input, reference='igc', mode_all=True)
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=97, action={drop})
+    if not mr.flag({mapped}):
+        discard
+
+counted = count(mapped,
+                    features=['eggNOG_OG'],
+                    multiple={dist1},
+                    normalization={scaled})
+collect(counted,
+        current=sample,
+        allneeded=samples,
+        ofile='outputs/gut.eggNOG.traditional.counts.txt',
+        auto_comments=[{hash}, {script}])
+
+
+counted = count(mapped,
+                    features=['seqname'],
+                    multiple={dist1},
+                    normalization={scaled})
+collect(counted,
+        current=sample,
+        allneeded=samples,
+        ofile='outputs/gut.seqname.counts.txt',
+        auto_comments=[{hash}, {script}])
+

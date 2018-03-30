@@ -1,0 +1,22 @@
+ngless "0.7"
+import "parallel" version "0.6"
+import "mocat" version "0.0"
+import "specI" version "0.1"
+import "igc" version "0.9"
+import "motus" version "0.1"
+
+samples = readlines('../data/gut/gut')
+sample = lock1(samples)
+
+mapped = samfile('gut-temp/filtered-igc/'+sample+'.sam')
+counted = count(mapped,
+                    features=['OGs'],
+                    multiple={dist1},
+                    normalization={scaled},
+                    functional_map='IGC_catalog-v1.0.0.emapper.annotations-v2.fixed_header.tsv')
+collect(counted,
+        current=sample,
+        allneeded=samples,
+        ofile='outputs/gut.eggNOG.traditional.counts.txt',
+        auto_comments=[{hash}, {script}])
+

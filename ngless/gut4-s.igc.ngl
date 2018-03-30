@@ -1,0 +1,13 @@
+ngless "0.7"
+import "parallel" version "0.6"
+import "mocat" version "0.0"
+import "specI" version "0.1"
+import "motus" version "0.1"
+import "igc" version "0.0"
+
+samples = readlines('../data/gut/gut')
+sample = lock1(samples)
+
+input = load_mocat_sample('gut-temp/screen-filter-hg19-'+sample)
+mapped = map(input, reference='igc', mode_all=True)
+write(mapped, ofile='gut-temp/screen-igc/'+sample+'.sam')
