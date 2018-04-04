@@ -9,4 +9,4 @@ input = load_mocat_sample('gut-temp/rtf-'+sample)
 
 mapped = map(input, reference='hg19')
 
-write(mapped, ofile='gut-temp/screen-hg19-'+sample+'.bam')
+write(mapped, ofile='gut-temp/screen-hg19-'+sample+'.sam')

@@ -8,7 +8,7 @@ import "igc" version "0.0"
 samples = readlines('../data/gut/gut')
 sample = lock1(samples)
 
-mapped = samfile('gut-temp/screen-hg19-'+sample+'.bam')
+mapped = samfile('gut-temp/screen-hg19-'+sample+'.sam')
 
 mapped = select(mapped) using |mr|:
     mr = mr.filter(min_match_size=45, min_identity_pc=90, action={unmatch})
