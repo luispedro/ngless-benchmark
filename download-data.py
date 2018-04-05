@@ -7,7 +7,7 @@ def download_file(url, target):
     import requests
     with open(target, 'wb') as output:
         r = requests.get(url, stream=True)
-        for c in r.iter_content(chunk_size=8192):
+        for c in r.iter_content(chunk_size=8192 * 1024):
             output.write(c)
 
 data = {
