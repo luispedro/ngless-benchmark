@@ -1,5 +1,6 @@
 *.jugdata/
 /logs/
+/MOCAT/
 MOCAT.executed
 MOCAT.successful
 timing-individual
