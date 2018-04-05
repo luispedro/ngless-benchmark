@@ -1,4 +1,4 @@
-ngless "0.7"
+ngless "0.8"
 import "parallel" version "0.6"
 import "mocat" version "0.0"
 import "specI" version "0.1"
@@ -63,12 +63,12 @@ collect(count(mapped,
 
 mapped = map(input, reference='igc', mode_all=True)
 mapped = select(mapped) using |mr|:
-    mr = mr.filter(min_match_size=45, min_identity_pc=97, action={drop})
+    mr = mr.filter(min_match_size=45, min_identity_pc=95, action={drop})
     if not mr.flag({mapped}):
         discard
 
 counted = count(mapped,
-                    features=['eggNOG_OG'],
+                    features=['OGs'],
                     multiple={dist1},
                     normalization={scaled})
 collect(counted,

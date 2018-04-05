@@ -10,7 +10,8 @@ Running:
 
     jug execute
 
-will generate the file `ngless_benchmark.csv` with the results.
+will generate the file `ngless_benchmark.csv` with the results. Note that this
+will produce very large intermediate files and require ca. 64 GiB of RAM.
 
 The files `gut.ngl` and `ocean.ngl` contain the full pipelines. The variations
 with names such as `gut0-rtf.ngl` contain parts of the processing. The only

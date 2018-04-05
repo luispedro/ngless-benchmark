@@ -1,5 +1,5 @@
-ngless "0.0"
-import "parallel" version "0.0"
+ngles "0.8"
+import "parallel" version "0.6"
 import "mocat" version "0.0"
 import "specI" version "0.0"
 import "om-rgc" version "0.0"
@@ -8,13 +8,17 @@ samples = readlines('../data/tara/tara')
 sample = lock1(samples)
 
 input = load_mocat_sample('../data/tara/' + sample)
-
-preprocess(input, keep_singles=False) using |read|:
+input = preprocess(input, keep_singles=False) using |read|:
     read = substrim(read, min_quality=25)
     if len(read) < 45:
         discard
 
 mapped = map(input, reference='om-rgc', mode_all=True)
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=95, action={drop})
+    if not mr.flag({mapped}):
+        discard
+
 
 counts = count(mapped,
             features=['KEGG_ko', 'eggNOG_OG'],

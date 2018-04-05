@@ -1,0 +1,16 @@
+ngless "0.8"
+import "parallel" version "0.6"
+import "mocat" version "0.0"
+import "specI" version "0.0"
+import "om-rgc" version "0.0"
+
+samples = readlines('../data/tara/tara')
+sample = lock1(samples)
+mapped = samfile('tara-temp' </> sample + '-om-rgc.sam')
+
+mapped = select(mapped) using |mr|:
+    mr = mr.filter(min_match_size=45, min_identity_pc=95, action={drop})
+    if not mr.flag({mapped}):
+        discard
+
+write(mapped, ofile='tara-temp' </> sample + '-om-rgc.filtered.sam')

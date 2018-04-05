@@ -37,6 +37,9 @@ def make_temp_directories(_):
         if not s.startswith('SAME'): continue
         os.makedirs(f'gut-temp/rtf-{s}')
         os.makedirs(f'gut-temp/screen-filter-hg19-{s}')
+    for s in os.listdir('../data/tara/'):
+        if not s.startswith('SAME'): continue
+        os.makedirs(f'tara-temp/{s}')
 
 NCPU = 8
 NREPLICATES = 3
@@ -53,7 +56,15 @@ for rep in range(NREPLICATES):
                     'gut4-s.igc.ngl',
                     'gut5-f.igc.ngl',
                     'gut6-p.igc.ngl',
-                    'gut-full.ngl',
+                    'gut.ngl',
+
+                    'ocean0-rtf.ngl',
+                    'ocean1-s-om-rgc.ngl',
+                    'ocean2-f-om-rgc.ngl',
+                    'ocean3-p-functional-om-rgc.ngl',
+                    'ocean4-p-seqname-om-rgc.ngl',
+                    'ocean.ngl',
+
                         ]:
         for i in range(NSAMPLES):
             outs[target, rep, i] = run_time(target, NCPU, rep*NREPLICATES + i)

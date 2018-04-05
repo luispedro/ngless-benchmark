@@ -4,3 +4,5 @@ ngless-stats/
 ngless-partials/
 /gut-temp/
 /ocean-temp/
+*.output_ngless/
+/outputs/
