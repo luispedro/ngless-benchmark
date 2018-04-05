@@ -1,11 +1,11 @@
-# NGLess scripts
+# MOCAT benchmark
 
 Note that the results of running this benchmark are provided in
-`data/precomputed`.
+`../data/precomputed`.
 
-## Running MOCAT benchmark
+## Running NGLess benchmark
 
-You must have [jug](http://jug.rtfd.io) and [MOCAT2](http://mocat.embl.de)
+You must have [jug](http://jug.rtfd.io) and [ngless](http://ngless.embl.de)
 installed and have run the `download-data.py` script at the top level of this
 repository.
 
