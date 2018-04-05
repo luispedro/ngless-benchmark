@@ -8,6 +8,9 @@ NCPU="$1"
 SAMPLEFILE=gut
 TIMING=timing-individual
 
+export PERL5LIB="$PERL5LIB:$(pwd)/MOCAT/src"
+export PATH="$(pwd)/MOCAT/src:$(pwd)/MOCAT/bin:$PATH"
+
 /usr/bin/time --verbose -ao $TIMING MOCAT.pl -cfg MOCAT.cfg -sf $SAMPLEFILE -cpus "$NCPU" \
     -rtf -config\
     &>> logs/rtf_${SAMPLEFILE}.log
