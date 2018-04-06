@@ -24,6 +24,10 @@ def cleanup_ngless(_):
     shutil.rmtree('ngless-locks', ignore_errors=True)
     shutil.rmtree('ngless-partials', ignore_errors=True)
     shutil.rmtree('ngless-stats', ignore_errors=True)
+
+@TaskGenerator
+def deep_clean(_):
+    import shutil
     shutil.rmtree('gut-temp', ignore_errors=True)
     shutil.rmtree('ocean-temp', ignore_errors=True)
 
@@ -46,9 +50,13 @@ NREPLICATES = 3
 NSAMPLES = 3
 
 outs = {}
+outs_cpu = {}
 for rep in range(NREPLICATES):
-    cleanup_ngless(rep)
-    make_temp_directories(rep)
+    barrier()
+    prev = {'replicate': rep}
+    prev = cleanup_ngless(prev)
+    prev = deep_clean(prev)
+    prev = make_temp_directories(prev)
     for target in [ 'gut0-rtf.ngl',
                     'gut1-s.hg19.ngl',
                     'gut2-f.hg19.ngl',
@@ -64,9 +72,24 @@ for rep in range(NREPLICATES):
                     'ocean3-p-functional-om-rgc.ngl',
                     'ocean4-p-seqname-om-rgc.ngl',
                     'ocean.ngl',
-
                         ]:
         for i in range(NSAMPLES):
-            outs[target, rep, i] = run_time(target, NCPU, rep*NREPLICATES + i)
-    barrier()
+            c = run_time(target, NCPU, prev)
+            outs[target, rep, i] = c
+            prev = c
+    for ncpu in [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]:
+        cleanup_ngless(prev)
+        for target in [ 'gut0-rtf.ngl',
+                        'gut2-f.hg19.ngl',
+                        'gut5-f.igc.ngl',
+                        'gut6-p.igc.ngl',
 
+                        'ocean0-rtf.ngl',
+                        'ocean2-f-om-rgc.ngl',
+                        'ocean3-p-functional-om-rgc.ngl',
+                        'ocean4-p-seqname-om-rgc.ngl',
+                        ]:
+            for i in range(NSAMPLES):
+                c = run_time(target, ncpu, prev)
+                outs_cpu[target, rep, i, ncpu] = c
+                prev = c
