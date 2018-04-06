@@ -19,6 +19,11 @@ def run_time(target, ncpu, _):
 
 
 @TaskGenerator
+def parse_output(out):
+    from parse_time import parse
+    return parse(out[1].decode('ascii'))
+
+@TaskGenerator
 def cleanup_ngless(_):
     import shutil
     shutil.rmtree('ngless-locks', ignore_errors=True)
@@ -75,7 +80,7 @@ for rep in range(NREPLICATES):
                         ]:
         for i in range(NSAMPLES):
             c = run_time(target, NCPU, prev)
-            outs[target, rep, i] = c
+            outs[target, rep, i] = parse_output(c)
             prev = c
     for ncpu in [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]:
         cleanup_ngless(prev)
@@ -91,5 +96,5 @@ for rep in range(NREPLICATES):
                         ]:
             for i in range(NSAMPLES):
                 c = run_time(target, ncpu, prev)
-                outs_cpu[target, rep, i, ncpu] = c
+                outs_cpu[target, rep, i, ncpu] = parse_output(c)
                 prev = c
