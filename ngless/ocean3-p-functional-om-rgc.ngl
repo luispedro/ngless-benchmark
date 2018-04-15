@@ -10,6 +10,7 @@ sample = lock1(samples)
 mapped = samfile('tara-temp' </> sample + '-om-rgc.filtered.sam')
 counts = count(mapped,
             features=['KEGG_ko', 'eggNOG_OG'],
+            reference='om-rgc',
             normalization={scaled})
 
 collect(counts,
