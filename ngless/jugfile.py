@@ -34,7 +34,7 @@ def cleanup_ngless(_):
 def deep_clean(_):
     import shutil
     shutil.rmtree('gut-temp', ignore_errors=True)
-    shutil.rmtree('ocean-temp', ignore_errors=True)
+    shutil.rmtree('tara-temp', ignore_errors=True)
 
 
 @TaskGenerator
