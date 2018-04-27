@@ -50,6 +50,13 @@ def make_temp_directories(_):
         if not s.startswith('SAME'): continue
         os.makedirs(f'tara-temp/{s}')
 
+
+@TaskGenerator
+def save_to(outs, oname):
+    import pandas as pd
+    pd.DataFrame(outs).T.to_csv(oname, sep='\t')
+
+
 NCPU = 8
 NREPLICATES = 3
 NSAMPLES = 3
@@ -98,3 +105,5 @@ for rep in range(NREPLICATES):
                 c = run_time(target, ncpu, prev)
                 outs_cpu[target, rep, i, ncpu] = parse_output(c)
                 prev = c
+
+save_to(outs, 'ngless_benchmarks.tsv')
