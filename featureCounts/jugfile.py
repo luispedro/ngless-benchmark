@@ -37,8 +37,12 @@ def run_map(sample, ref, oname, ncpus, _):
 
 
 @TaskGenerator
-def run_featureCount(*args):
-    raise ValueError
+def run_featureCount(samname, ref, oname, ncpu, _):
+    return run_time(['featureCounts', '-o', oname,
+                '-T1', # Should be f'-T{ncpu}', but featureCounts then crashes
+                '-a', f'references/{ref}.gff',
+                '-t', 'eggnog45', '-g', 'NOG',
+                samname])
 
 
 @TaskGenerator
@@ -52,7 +56,7 @@ def create_data_dirs(samples):
             os.makedirs(f'data/{target}/{s}', exist_ok=True)
             if len(files) == 2:
                 for f in files:
-                    os.symlink('../'+f, f'data/{target}/{s}/'+os.path.basename(f))
+                    os.symlink('../../../'+f, f'data/{target}/{s}/'+os.path.basename(f))
             else:
                 with open(f'data/{target}/{s}/concat.1.fq.gz', 'wb') as out1, \
                      open(f'data/{target}/{s}/concat.2.fq.gz', 'wb') as out2:
@@ -81,6 +85,9 @@ prev = None
 for rep in range(NREPLICATES):
     for target in ['gut', 'tara']:
         for s in samples[target]:
-            samname = f'{target}-temp/{s}.mapped.sam'
+            samname = f'{target}-temp/{s}.{rep}.mapped.sam'
+            oname = f'outputs/{s}.{rep}.txt'
             c = run_map(f'data/{target}/{s}', reference[target], samname, NCPU, rep)
-            # run_featureCount(samname, reference[target][1], oname, c)
+            outs[target, 'map', s, rep] = c
+            if target == 'gut':
+                outs[target, 'featureCounts', s, rep] = run_featureCount(samname, reference[target], oname, NCPU, c)
