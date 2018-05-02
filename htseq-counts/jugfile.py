@@ -46,6 +46,20 @@ def run_featureCount(samname, ref, oname, ncpu, _):
 
 
 @TaskGenerator
+def run_htseq_count(samname, ref, oname, _ncpu, _rep):
+    with open(oname, 'wb') as out:
+        return run_time(['htseq-count',
+                    '--quiet',
+                    '-f', 'sam',
+                    '-s', 'no',
+                    '-t', 'eggnog45',
+                    '-i', 'NOG',
+                    samname,
+                    f'references/{ref}.gff'],
+                    stdout=out)
+
+
+@TaskGenerator
 def create_data_dirs(samples):
     os.makedirs('data/', exist_ok=True)
     os.makedirs('gut-temp/', exist_ok=True)
@@ -90,4 +104,4 @@ for rep in range(NREPLICATES):
             c = run_map(f'data/{target}/{s}', reference[target], samname, NCPU, rep)
             outs[target, 'map', s, rep] = c
             if target == 'gut':
-                outs[target, 'featureCounts', s, rep] = run_featureCount(samname, reference[target], oname, NCPU, c)
+                outs[target, 'htseq-count', s, rep] = run_htseq_count(samname, reference[target], oname, NCPU, c)
