@@ -103,5 +103,4 @@ for rep in range(NREPLICATES):
             oname = f'outputs/{s}.{rep}.txt'
             c = run_map(f'data/{target}/{s}', reference[target], samname, NCPU, rep)
             outs[target, 'map', s, rep] = c
-            if target == 'gut':
-                outs[target, 'htseq-count', s, rep] = run_htseq_count(samname, reference[target], oname, NCPU, c)
+            outs[target, 'htseq-count', s, rep] = run_htseq_count(samname, reference[target], oname, NCPU, c)
