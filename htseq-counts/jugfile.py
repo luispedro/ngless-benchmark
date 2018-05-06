@@ -74,7 +74,7 @@ def create_data_dirs(samples):
             else:
                 with open(f'data/{target}/{s}/concat.1.fq.gz', 'wb') as out1, \
                      open(f'data/{target}/{s}/concat.2.fq.gz', 'wb') as out2:
-                    for f in files:
+                    for f in sorted(files):
                         out = (out1 if f.endswith('_1.fastq.gz') else out2)
                         with open(f, 'rb') as ifile:
                             while True:
