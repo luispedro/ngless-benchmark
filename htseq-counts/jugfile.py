@@ -10,7 +10,18 @@ samples = {
         'tara': [line.strip() for line in open('../data/tara/tara')],
         }
 
+@TaskGenerator
+def parse_output(out):
+    from parse_time import parse
+    out = out.decode('ascii')
+    out = '\n'.join([ell for ell in out.splitlines() if ell[0] == '\t'])
+    return parse(out)
 
+
+@TaskGenerator
+def save_to(outs, oname):
+    import pandas as pd
+    pd.DataFrame(outs).T.to_csv('../data/precomputed/htseq-count.tsv', sep='\t')
 
 def run_time(args, stdout=None):
     import subprocess
@@ -102,5 +113,8 @@ for rep in range(NREPLICATES):
             samname = f'{target}-temp/{s}.{rep}.mapped.sam'
             oname = f'outputs/{s}.{rep}.txt'
             c = run_map(f'data/{target}/{s}', reference[target], samname, NCPU, rep)
-            outs[target, 'map', s, rep] = c
-            outs[target, 'htseq-count', s, rep] = run_htseq_count(samname, reference[target], oname, NCPU, c)
+            outs[target, 'map', s, rep] = parse_output(c)
+            c = run_htseq_count(samname, reference[target], oname, NCPU, c)
+            outs[target, 'htseq-count', s, rep] = parse_output(c)
+
+save_to(outs, '../data/precomputed/htseq-count_benchmark.tsv')
