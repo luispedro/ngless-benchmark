@@ -1,7 +1,7 @@
 import pandas as pd
 import seaborn as sns
 
-ngl = pd.read_table('../data/precomputed/ngless_benchmarks.tsv')
+ngl = pd.read_table('../data/precomputed/ngless_benchmark.tsv')
 mocat = pd.read_csv('../data/precomputed/mocat_benchmark.csv', index_col=0)
 hts = pd.read_table('../data/precomputed/htseq-count_benchmark.tsv')
 hts.rename(columns={

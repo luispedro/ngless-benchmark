@@ -21,7 +21,7 @@ def parse_output(out):
 @TaskGenerator
 def save_to(outs, oname):
     import pandas as pd
-    pd.DataFrame(outs).T.to_csv('../data/precomputed/htseq-count.tsv', sep='\t')
+    pd.DataFrame(outs).T.to_csv('../data/precomputed/htseq-count_benchmark.tsv', sep='\t')
 
 def run_time(args, stdout=None):
     import subprocess

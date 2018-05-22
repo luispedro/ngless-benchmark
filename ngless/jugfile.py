@@ -90,7 +90,7 @@ for rep in range(NREPLICATES):
             outs[target, rep, i] = parse_output(c)
             prev = c
 
-save_to(outs, '../data/precomputed/ngless_benchmarks.tsv')
+save_to(outs, '../data/precomputed/ngless_benchmark.tsv')
 
 for rep in range(NREPLICATES):
     barrier()
