@@ -7,12 +7,18 @@ hts = pd.read_table('../data/precomputed/htseq-count_benchmark.tsv')
 hts.rename(columns={
     hts.columns[0]: 'dataset',
     hts.columns[1]: 'action',
+    hts.columns[2]: 'sample-id',
+    hts.columns[3]: 'rep-nr',
     }, inplace=True)
 
-hts = hts.groupby(['dataset', 'action', 'Unnamed: 3']).sum().reset_index()
+hts = hts.groupby(['dataset', 'action', 'rep-nr']).sum().reset_index()
 hts['action'] = hts.action.map({'map':'Screen', 'htseq-count':'Profile'})
-hts['tool'] = 'bwa/htseq-count'
 hts['target'] = hts.dataset.map({'gut': 'IGC', 'tara' : 'OM-RGC'})
+htsfull = hts.groupby(['dataset', 'rep-nr']).sum().reset_index()
+htsfull['action'] = 'Full'
+htsfull['target'] = '-'
+hts = pd.concat((hts, htsfull))
+hts['tool'] = 'bwa/htseq-count'
 
 mocat.rename(columns={
     'Elapsed time': 'wallclock',
@@ -72,7 +78,7 @@ data = pd.concat((ngl[COLS], mocat[COLS], hts[COLS], gut_full, tara_full))
 data.reset_index(inplace=True)
 data.fillna('-', inplace=True)
 
-g = sns.factorplot(x="action", y="wallclock", hue="tool", hue_order=['ngless', 'mocat', 'bwa/htseq-count'], kind="box", row='dataset', data=data, aspect=1.7)
+g = sns.factorplot(x="action", y="wallclock", hue="tool", hue_order=['ngless', 'mocat', 'bwa/htseq-count'], kind="swarm", col='dataset', sharey=True, data=data, aspect=1.7)
 g.fig.get_axes()[0].set_yscale('log')
 g.fig.get_axes()[1].set_yscale('log')
 
