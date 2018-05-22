@@ -77,14 +77,3 @@ collect(counted,
         ofile='outputs/gut.eggNOG.traditional.counts.txt',
         auto_comments=[{hash}, {script}])
 
-
-counted = count(mapped,
-                    features=['seqname'],
-                    multiple={dist1},
-                    normalization={scaled})
-collect(counted,
-        current=sample,
-        allneeded=samples,
-        ofile='outputs/gut.seqname.counts.txt',
-        auto_comments=[{hash}, {script}])
-

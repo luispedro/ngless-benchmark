@@ -29,15 +29,6 @@ collect(counts,
         allneeded=samples,
         ofile='outputs/tara.om-rgc.functional.profiles.txt')
 
-counts = count(mapped,
-            features=['seqname'],
-            normalization={scaled})
-
-collect(counts,
-        current=sample,
-        allneeded=samples,
-        ofile='outputs/tara.om-rgc.gene.profiles.txt')
-
 mapped = map(input, reference='refmg', mode_all=True)
 
 specIs = count(mapped, features=['gene'], multiple={dist1}, normalization={scaled})

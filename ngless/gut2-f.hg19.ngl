@@ -1,4 +1,4 @@
-ngless "0.7"
+ngless "0.8"
 import "parallel" version "0.6"
 import "mocat" version "0.0"
 import "specI" version "0.1"

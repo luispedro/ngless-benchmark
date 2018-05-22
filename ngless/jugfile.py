@@ -89,6 +89,12 @@ for rep in range(NREPLICATES):
             c = run_time(target, NCPU, prev)
             outs[target, rep, i] = parse_output(c)
             prev = c
+
+save_to(outs, '../data/precomputed/ngless_benchmarks.tsv')
+
+for rep in range(NREPLICATES):
+    barrier()
+    prev = {'replicate': rep, 'vary-cpu': True}
     for ncpu in [1, 2, 4, 8, 12, 16, 20, 24, 28, 32]:
         cleanup_ngless(prev)
         for target in [ 'gut0-rtf.ngl',
@@ -105,5 +111,3 @@ for rep in range(NREPLICATES):
                 c = run_time(target, ncpu, prev)
                 outs_cpu[target, rep, i, ncpu] = parse_output(c)
                 prev = c
-
-save_to(outs, 'ngless_benchmarks.tsv')
