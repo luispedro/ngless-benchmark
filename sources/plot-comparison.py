@@ -1,3 +1,7 @@
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib import patches
+from collections import Counter
 import pandas as pd
 import seaborn as sns
 
@@ -71,19 +75,46 @@ mocat = mocat[COLS]
 tara_full = mocat[mocat.dataset == 'tara'].reset_index()
 tara_full = pd.DataFrame([('tara', 'Full', '-', 'mocat', wc) for wc in tara_full.groupby(lambda i : i // 4).sum()['wallclock'].values], columns=COLS)
 gut_full = mocat[mocat.dataset == 'gut'].reset_index()
-gut_full = pd.DataFrame([('gut', 'Full', '-', 'mocat', wc) for wc in gut_full.groupby(lambda i : i // 5).sum()['wallclock'].values], columns=COLS)
+gut_full = pd.DataFrame([('gut', 'Full', '-', 'mocat', wc) for wc in gut_full.groupby(lambda i : i // 4).sum()['wallclock'].values], columns=COLS)
 
 data = pd.concat((ngl[COLS], mocat[COLS], hts[COLS], gut_full, tara_full))
 
 data.reset_index(inplace=True)
 data.fillna('-', inplace=True)
 
-g = sns.factorplot(x="action", y="wallclock", hue="tool", hue_order=['ngless', 'mocat', 'bwa/htseq-count'], kind="swarm", col='dataset', sharey=True, data=data, aspect=1.7)
-g.fig.get_axes()[0].set_yscale('log')
-g.fig.get_axes()[1].set_yscale('log')
+ACTIONS = ['Full', 'ReadTrimFilter', 'Screen', 'Filter', 'Profile']
+DATASETS = ['gut', 'tara']
+COLORS = ['#1b9e77', '#d95f02', '#7570b3']
+MARKERS = "oDs"
+TOOLS = ['bwa/htseq-count', 'mocat', 'ngless']
 
-g.fig.tight_layout()
-g.savefig('ngless-mocat-htseq-count-compare.png', dpi=150)
-g.savefig('ngless-mocat-htseq-count-compare.svg')
-g.savefig('ngless-mocat-htseq-count-compare.pdf')
+fig,ax = plt.subplots()
+
+
+fig,ax = plt.subplots()
+rep = Counter()
+for k, row in data.iterrows():
+    base = ACTIONS.index(row['action'])*3 + DATASETS.index(row['dataset'])
+    key = tuple(row[['action', 'dataset', 'tool']].values)
+    base += rep[key]/4
+    rep[key] += 1
+    x = base
+    y = row['wallclock']
+    c = COLORS[TOOLS.index(row['tool'])]
+    m = MARKERS[TOOLS.index(row['tool'])]
+    ax.scatter([x], [y], c=c, marker=m, s=12)
+for ac in range(len(ACTIONS)):
+    x = 3*ac+.75
+    y = 0
+    ax.add_patch(patches.Rectangle([x,y], 1, max(data['wallclock']) * 1.1, zorder=-1))
+
+ax.set_yscale('log')
+ax.set_xticks(np.arange(len(ACTIONS))*3+0.5)
+ax.set_xticklabels(ACTIONS)
+
+
+fig.tight_layout()
+fig.savefig('ngless-mocat-htseq-count-compare.png', dpi=150)
+fig.savefig('ngless-mocat-htseq-count-compare.svg')
+fig.savefig('ngless-mocat-htseq-count-compare.pdf')
 
