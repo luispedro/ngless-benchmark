@@ -89,9 +89,6 @@ MARKERS = "oDs"
 TOOLS = ['bwa/htseq-count', 'mocat', 'ngless']
 
 fig,ax = plt.subplots()
-
-
-fig,ax = plt.subplots()
 rep = Counter()
 for k, row in data.iterrows():
     base = ACTIONS.index(row['action'])*3 + DATASETS.index(row['dataset'])
@@ -106,12 +103,11 @@ for k, row in data.iterrows():
 for ac in range(len(ACTIONS)):
     x = 3*ac+.75
     y = 0
-    ax.add_patch(patches.Rectangle([x,y], 1, max(data['wallclock']) * 1.1, zorder=-1))
+    ax.add_patch(patches.Rectangle([x,y], 1, max(data['wallclock']) * 1.1, zorder=-1, color='#0091ff26'))
 
 ax.set_yscale('log')
 ax.set_xticks(np.arange(len(ACTIONS))*3+0.5)
 ax.set_xticklabels(ACTIONS)
-
 
 fig.tight_layout()
 fig.savefig('ngless-mocat-htseq-count-compare.png', dpi=150)
