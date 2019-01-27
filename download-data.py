@@ -1,34 +1,69 @@
 #!/usr/bin/env python
 
+import subprocess
 from os import makedirs, path
 ENA_BASE_URL = 'http://ftp.sra.ebi.ac.uk/vol1/fastq/'
+ASPERA_BASE = 'era-fasp@fasp.sra.ebi.ac.uk:vol1/fastq/'
+ASPERA_BINARY = path.expanduser('~/.aspera/connect/bin/ascp')
+ASPERA_KEY = path.expanduser('~/.aspera/connect/etc/asperaweb_id_dsa.openssh')
+ASPERA = path.isfile(ASPERA_BINARY)
 
 def download_file(url, target):
-    import requests
-    with open(target, 'wb') as output:
-        r = requests.get(url, stream=True)
-        for c in r.iter_content(chunk_size=8192 * 1024):
-            output.write(c)
+    if ASPERA:
+        cmdline = [
+                ASPERA_BINARY,
+                '-P33001', # Use special port
+                '-T', # No encryption
+                '-i', ASPERA_KEY,
+                ASPERA_BASE + url,
+                target]
+        subprocess.run(cmdline, check=True)
+
+    else:
+        import requests
+        with open(target, 'wb') as output:
+            r = requests.get(ENA_BASE_URL + url, stream=True)
+            for c in r.iter_content(chunk_size=8192 * 1024):
+                output.write(c)
 
 data = {
     'tara' : {
         'SAMEA2621229' : ['ERR594/ERR594355/ERR594355_1.fastq.gz'],
-
         'SAMEA2621155' : ['ERR599/ERR599133/ERR599133_1.fastq.gz'],
-
-        'SAMEA2621033' : ['ERR594/ERR594391/ERR594391_1.fastq.gz']
+        'SAMEA2621033' : ['ERR594/ERR594391/ERR594391_1.fastq.gz'],
+        'SAMEA2622357' : ['ERR594/ERR594357/ERR594357_1.fastq.gz'],
+        'SAMEA2621107' : ['ERR275/005/ERR2752145/ERR2752145_1.fastq.gz'],
+        'SAMEA2621010' : ['ERR275/006/ERR2752146/ERR2752146_1.fastq.gz',
+                          'ERR275/007/ERR2752147/ERR2752147_1.fastq.gz'],
+        'SAMEA2621247' : ['ERR275/008/ERR2752148/ERR2752148_1.fastq.gz'],
+        'SAMEA2621300' : ['ERR275/009/ERR2752149/ERR2752149_1.fastq.gz',
+                          'ERR275/000/ERR2752150/ERR2752150_1.fastq.gz'],
         },
     'gut' : {
         'SAMEA2467039' : ['ERR478/ERR478958/ERR478958_1.fastq.gz',
-                        'ERR478/ERR478959/ERR478959_1.fastq.gz',
-                        'ERR478/ERR478960/ERR478960_1.fastq.gz',
-                        'ERR478/ERR478961/ERR478961_1.fastq.gz'],
+                          'ERR478/ERR478959/ERR478959_1.fastq.gz',
+                          'ERR478/ERR478960/ERR478960_1.fastq.gz',
+                          'ERR478/ERR478961/ERR478961_1.fastq.gz'],
         'SAMEA2466896' : ['ERR478/ERR478962/ERR478962_1.fastq.gz',
-                        'ERR478/ERR478963/ERR478963_1.fastq.gz'],
+                          'ERR478/ERR478963/ERR478963_1.fastq.gz'],
         'SAMEA2466965' : ['ERR478/ERR478964/ERR478964_1.fastq.gz',
-                        'ERR478/ERR478965/ERR478965_1.fastq.gz',
-                        'ERR478/ERR478966/ERR478966_1.fastq.gz',
-                        'ERR478/ERR478967/ERR478967_1.fastq.gz']
+                          'ERR478/ERR478965/ERR478965_1.fastq.gz',
+                          'ERR478/ERR478966/ERR478966_1.fastq.gz',
+                          'ERR478/ERR478967/ERR478967_1.fastq.gz'],
+        'SAMEA2467015' : ['ERR479/ERR479118/ERR479118_1.fastq.gz',
+                          'ERR479/ERR479119/ERR479119_1.fastq.gz',
+                          'ERR479/ERR479120/ERR479120_1.fastq.gz',
+                          'ERR479/ERR479121/ERR479121_1.fastq.gz'],
+        'SAMEA2466953' : ['ERR479/ERR479122/ERR479122_1.fastq.gz',
+                          'ERR479/ERR479123/ERR479123_1.fastq.gz'],
+        'SAMEA2466996' : ['ERR479/ERR479124/ERR479124_1.fastq.gz',
+                          'ERR479/ERR479125/ERR479125_1.fastq.gz',
+                          'ERR479/ERR479126/ERR479126_1.fastq.gz',
+                          'ERR479/ERR479127/ERR479127_1.fastq.gz'],
+        'SAMEA2466952' : ['ERR479/ERR479136/ERR479136_1.fastq.gz',
+                          'ERR479/ERR479137/ERR479137_1.fastq.gz'],
+        'SAMEA2466916' : ['ERR479/ERR479140/ERR479140_1.fastq.gz',
+                          'ERR479/ERR479141/ERR479141_1.fastq.gz'],
         }
     }
 
@@ -41,7 +76,7 @@ for benchgroup, entries in data.items():
         for f in fqs:
             target = path.join(basedir, path.basename(f))
             print(f"Downloading {target}...")
-            download_file(ENA_BASE_URL + f, target)
+            download_file(f, target)
     with open(path.join('data', benchgroup, benchgroup), 'wt') as slist:
         for sample in entries.keys():
             slist.write(f"{sample}\n")
