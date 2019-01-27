@@ -18,7 +18,7 @@ def download_file(url, target):
             output.write(c)
 
 data = {
-    "ocean": ("MOCAT/v2.0/OM-RGC.zip", "OM-RGC.zip"),
+    "ocean": ("MOCAT/v2.0/OM-RGC-fixed-annotation.zip", "OM-RGC.zip"),
     "igc": ("MOCAT/v2.0/IGC.zip", "IGC.zip"),
     "human": ("MOCAT/data/hg19.gz", "hg19"),
 }

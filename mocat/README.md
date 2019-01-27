@@ -34,3 +34,16 @@ The files `run_mocat_gut.sh` and `run_mocat_tara.sh` contain the full pipelines.
 If your perl installation is missing some third party libraries you might run
 into errors. If this happens check the files in the logs/ folder for debugging
 information.
+
+Depending on your system it may also be necessary to modify `MOCAT_dir` in
+`MOCAT.cfg` and `MOCAT-simulated.cfg` to be an absolute path to the MOCAT subfolder
+in the same location as this README. That is, if this README is in `/path/to/README`
+`MOCAT_dir` should read `/path/to/MOCAT`.
+
+### OM-RGC profiling
+
+MOCAT's OM-RGC.zip includes a `functional.map` file with incorrect IDs.
+These don't match the OM-RGC fasta file in the same zip file.
+
+To address this a new `functional.map` file was created.
+The correct version is now downloaded by download-mocat-and-data.py .
