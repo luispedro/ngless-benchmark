@@ -17,23 +17,23 @@ export PATH="$(pwd)/MOCAT/src:$(pwd)/MOCAT/bin:$PATH"
 
 # Mapping to ocean catalog
 /usr/bin/time --verbose -ao $TIMING MOCAT.pl -cfg MOCAT.cfg -sf $SAMPLEFILE -cpus "$NCPU" \
-    -s OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 \
+    -s OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 OM-RGC.9 \
     -r reads.processed -extracted_files -memory 60G \
     &>> logs/screen-OM-RGC_${SAMPLEFILE}.log
 
 /usr/bin/time --verbose -ao $TIMING MOCAT.pl -cfg MOCAT.cfg -sf $SAMPLEFILE -cpus "$NCPU" \
-    -f OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 \
+    -f OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 OM-RGC.9 \
     -r reads.processed -config filter_psort_buffer=8G -memory 60G \
     &>> logs/filter-OM-RGC_${SAMPLEFILE}.log
 
 /usr/bin/time --verbose -ao $TIMING MOCAT.pl -cfg MOCAT.cfg -sf $SAMPLEFILE -cpus "$NCPU" \
-    -p OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 \
+    -p OM-RGC.1 OM-RGC.2 OM-RGC.3 OM-RGC.4 OM-RGC.5 OM-RGC.6 OM-RGC.7 OM-RGC.8 OM-RGC.9 \
     -r reads.processed -mode functional \
     -no_paste -no_horizontal -memory 200G \
     &>> logs/profile-OM-RGC_${SAMPLEFILE}.log
 
 # Check MOCAT.cfg for which categories to do with functional profiling
-# KEGG (kegg exists as ko, pathway, modules in the functional.map file) - doing ko only
+# KEGG (kegg exists as ko, pathway, modules in the functional.map file) - doing ko and eggNOG_OG
 
 # Below SpecI
 /usr/bin/time --verbose -ao $TIMING MOCAT.pl -cfg MOCAT.cfg -sf $SAMPLEFILE -cpus "$NCPU" \

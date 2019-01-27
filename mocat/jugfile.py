@@ -40,13 +40,13 @@ def remove_data_and_results(_):
 
 @TaskGenerator
 def create_data_dirs(target, replicate):
-    for folder in glob("../data/{0}/SAMEA*".format(target)):
+    for folder in glob("../data/{0}/*SAMEA*".format(target)):
         os.mkdir(os.path.basename(folder))
-        for file in glob(os.path.join(folder, "*")):
+        for file in glob(os.path.join(folder, "*.fq.gz")):
 
             src = "../{0}".format(file)
 
-            newfile = re.sub(r'(.*)_([0-9])\.fastq\.gz', r'\1.\2.fq.gz',
+            newfile = re.sub(r'(.*)_([0-9])\.(fastq|fq)\.gz', r'\1.\2.fq.gz',
                              os.path.basename(file))
             dst = "{0}/{1}".format(os.path.basename(folder), newfile)
 
