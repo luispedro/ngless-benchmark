@@ -120,7 +120,7 @@ flush_logs()
 
 outs = {}
 for rep in range(NREPLICATES):
-    for target in ['gut', 'tara']:
+    for target in ['tara', 'gut', 'simulated_tara', 'simulated_gut']:
         target = create_data_dirs(target, rep)
         time = run_time(target, NCPU, rep)
         outs[target, rep] = time

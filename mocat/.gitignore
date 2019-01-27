@@ -3,4 +3,12 @@
 /MOCAT/
 MOCAT.executed
 MOCAT.successful
+MOCAT.failed
+MOCAT.cutoff5prime_calculated
+MOCATJob*
+from_SAME*
+SAME*
+TMP.*
+MC*
 timing-individual
+mocat_benchmark.csv
