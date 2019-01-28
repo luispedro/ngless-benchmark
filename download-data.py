@@ -90,7 +90,7 @@ data = {
         },
     }
 
-print("Downloading data [this can take a while and will take ca. 50GiB of disk space]...")
+print("Downloading data [this can take a while and will take ca. 360GiB of disk space]...")
 for benchgroup, entries in data.items():
     for sample, fqs in entries.items():
         basedir = path.join('data', benchgroup, sample)
