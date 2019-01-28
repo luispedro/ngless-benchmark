@@ -9,7 +9,7 @@ ASPERA_KEY = path.expanduser('~/.aspera/connect/etc/asperaweb_id_dsa.openssh')
 ASPERA = path.isfile(ASPERA_BINARY)
 
 def download_file(url, target):
-    if ASPERA:
+    if ASPERA and not url.startswith("http"):
         cmdline = [
                 ASPERA_BINARY,
                 '-P33001', # Use special port
@@ -20,9 +20,12 @@ def download_file(url, target):
         subprocess.run(cmdline, check=True)
 
     else:
+        if not url.startswith("http"):
+            url = ENA_BASE_URL + url
+
         import requests
         with open(target, 'wb') as output:
-            r = requests.get(ENA_BASE_URL + url, stream=True)
+            r = requests.get(url, stream=True)
             for c in r.iter_content(chunk_size=8192 * 1024):
                 output.write(c)
 
@@ -64,7 +67,27 @@ data = {
                           'ERR479/ERR479137/ERR479137_1.fastq.gz'],
         'SAMEA2466916' : ['ERR479/ERR479140/ERR479140_1.fastq.gz',
                           'ERR479/ERR479141/ERR479141_1.fastq.gz'],
-        }
+        },
+    'simulated_tara' : {
+        'from_SAMEA2621229' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621229_1.fastq.gz'],
+        'from_SAMEA2621155' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621155_1.fastq.gz'],
+        'from_SAMEA2621033' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621033_1.fastq.gz'],
+        'from_SAMEA2622357' : ['https://zenodo.org/record/2539432/files/from_SAMEA2622357_1.fastq.gz'],
+        'from_SAMEA2621107' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621107_1.fastq.gz'],
+        'from_SAMEA2621010' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621010_1.fastq.gz'],
+        'from_SAMEA2621247' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621247_1.fastq.gz'],
+        'from_SAMEA2621300' : ['https://zenodo.org/record/2539432/files/from_SAMEA2621300_1.fastq.gz'],
+        },
+    'simulated_gut' : {
+        'from_SAMEA2467039' : ['https://zenodo.org/record/2539432/files/from_SAMEA2467039_1.fastq.gz'],
+        'from_SAMEA2466896' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466896_1.fastq.gz'],
+        'from_SAMEA2466965' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466965_1.fastq.gz'],
+        'from_SAMEA2467015' : ['https://zenodo.org/record/2539432/files/from_SAMEA2467015_1.fastq.gz'],
+        'from_SAMEA2466953' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466953_1.fastq.gz'],
+        'from_SAMEA2466996' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466996_1.fastq.gz'],
+        'from_SAMEA2466952' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466952_1.fastq.gz'],
+        'from_SAMEA2466916' : ['https://zenodo.org/record/2539432/files/from_SAMEA2466916_1.fastq.gz'],
+        },
     }
 
 print("Downloading data [this can take a while and will take ca. 50GiB of disk space]...")
