@@ -42,7 +42,7 @@ def remove_data_and_results(_):
 def create_data_dirs(target, replicate):
     for folder in glob("../data/{0}/*SAMEA*".format(target)):
         os.mkdir(os.path.basename(folder))
-        for file in glob(os.path.join(folder, "*.fq.gz")):
+        for file in glob(os.path.join(folder, "*.fastq.gz")):
 
             src = "../{0}".format(file)
 
