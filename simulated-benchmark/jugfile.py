@@ -1,6 +1,6 @@
 import pandas as pd
 from scipy import stats, spatial
-from jug import TaskGenerator, barrier
+from jug import Task, TaskGenerator, barrier
 
 BASEDIR_GUT = '../data/simulated_gut/'
 BASEDIR_MARINE = '../data/simulated_tara/'
@@ -105,5 +105,46 @@ def build_table(catalog):
         ]).set_index('index')
 
 
+@TaskGenerator
+def summarize(table_gut, table_tara):
+    final = {}
+    final['tara', 'spearman (mean)'] = table_tara[[c for c in table_tara.columns if 'spear' in c]].mean()
+    final['tara', 'spearman (std)'] = table_tara[[c for c in table_tara.columns if 'spear' in c]].std()
+    final['gut', 'spearman (std)'] = table_gut[[c for c in table_tara.columns if 'spear' in c]].std()
+    final['gut', 'spearman (mean)'] = table_gut[[c for c in table_tara.columns if 'spear' in c]].mean()
+
+
+    final = pd.DataFrame(final).rename(index=lambda n: n.split('_')[0])*100
+    final.to_excel('final.xlsx')
+
+    full = pd.concat([table_tara, table_gut])
+    full = full.T[full.columns.map(lambda c: 'spear' in c)].T
+    full['environment'] = full.index.map(lambda c: ('marine' if  c in table_tara.index else 'human gut'))
+    full.to_excel('full.xlsx')
+
+
+@Task
+def save_precomputed():
+    full_data = {}
+    for catalog in ['gut', 'tara']:
+
+        sample_list = {
+                'gut' : BASEDIR_GUT + 'simulated_gut',
+                'tara' : BASEDIR_MARINE + 'simulated_tara',
+                }[catalog]
+
+        for s in open(sample_list):
+            s = s.strip()
+            full_data[s] = load_data(s, catalog)
+    f = pd.concat({k:v.T for k,v in full_data.items()}, keys=full_data.keys())
+    f = f.fillna(0)
+    f = f.T[f.any()]
+    f.to_csv('simulation-abundances.tsv', sep='\t')
+
+
+
+
 table_gut = build_table('gut')
 table_tara = build_table('tara')
+
+summarize(table_gut, table_tara)
