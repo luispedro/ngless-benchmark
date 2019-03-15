@@ -90,7 +90,7 @@ data = {
         },
     }
 
-print("Downloading data [this can take a while and will take ca. 360GiB of disk space]...")
+print("Downloading data [this can take a while and will take ca. 60GiB of disk space]...")
 for benchgroup, entries in data.items():
     for sample, fqs in entries.items():
         basedir = path.join('data', benchgroup, sample)
@@ -103,4 +103,5 @@ for benchgroup, entries in data.items():
     with open(path.join('data', benchgroup, benchgroup), 'wt') as slist:
         for sample in entries.keys():
             slist.write(f"{sample}\n")
+download_file('https://zenodo.org/record/2560288/files/all_samples.cog-distribution', 'data/all_samples.cog-distribution')
 print("Done.")

@@ -10,7 +10,7 @@ This repository includes code for benchmarking [ngless](http://ngless.embl.de).
 
 1. Download all data: run the script `download-data.py`. This will download
 from ENA into a directory `data/` (this process can take a few hours and will
-result in ca. 50GiB of data).
+result in ca. 60GiB of data).
 
 ### Using the precomputed results
 
