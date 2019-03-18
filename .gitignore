@@ -1,2 +1,3 @@
 *.pyc
 *.jugdata/
+.jugstatus.sqlite3
