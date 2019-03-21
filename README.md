@@ -1,15 +1,23 @@
 # NGLess Benchmarking
 
-This repository includes code for benchmarking [ngless](http://ngless.embl.de).
+This repository includes code for benchmarking [ngless](https://ngless.embl.de).
 
 ![Result](benchmark.png)
+
+This is a companion repository to:
+
+> _NG-meta-profiler: fast processing of metagenomes using NGLess, a
+> domain-specific language_ by Luis Pedro Coelho, Renato Alves, Paulo Monteiro,
+> Jaime Huerta-Cepas, Ana Teresa Freitas, Peer Bork bioRxiv 367755; doi:
+> [https://doi.org/10.1101/367755](https://doi.org/10.1101/367755)
+
 
 ## Reproducing
 
 ### From scratch
 
 1. Download all data: run the script `download-data.py`. This will download
-from ENA into a directory `data/` (this process can take a few hours and will
+from ENA into a directory `data/` (this process can take several hours and will
 result in ca. 60GiB of data).
 
 ### Using the precomputed results
