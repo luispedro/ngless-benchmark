@@ -8,8 +8,8 @@ This is a companion repository to:
 
 > _NG-meta-profiler: fast processing of metagenomes using NGLess, a
 > domain-specific language_ by Luis Pedro Coelho, Renato Alves, Paulo Monteiro,
-> Jaime Huerta-Cepas, Ana Teresa Freitas, Peer Bork bioRxiv 367755; doi:
-> [https://doi.org/10.1101/367755](https://doi.org/10.1101/367755)
+> Jaime Huerta-Cepas, Ana Teresa Freitas, and Peer Bork _in_ Microbiome 7:84 (2019)
+> [http://doi.org/10.1186/s40168-019-0684-8](http://doi.org/10.1186/s40168-019-0684-8)
 
 
 ## Reproducing
